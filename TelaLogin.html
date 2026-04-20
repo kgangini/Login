@@ -1,74 +1,65 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-br">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>TelaLogin</title>
-    <link rel="stylesheet" href="Login.css">
-    
+    <link rel="stylesheet" href="Login.css" />
+  </head>
+  <body>
+    <section id="Login">
+      <form autocomplete="off">
+        <h1>Login</h1>
 
-</head>
-<body>
+        <div class="inputBox">
+          <label for="iemail"></label>
+          <input
+            type="email"
+            id="iemail"
+            name="email"
+            required
+            minlenght="5"
+            maxlength="30"
+            placeholder="E-mail:"
+          />
+        </div>
 
-    
+        <div class="inputBox">
+          <label for="ipassword"></label>
+          <input
+            type="password"
+            id="ipassword"
+            name="password"
+            placeholder="Senha:"
+            required
+            minlenght="5"
+            maxlength="30"
+          />
+        </div>
 
+        <div class="forget">
+          <input type="checkbox" name="remember" id="iremember" />
+          <label for="iremember">Me manter conectado</label>
 
-      
+          <a href="#">Esqueci minha senha </a>
+        </div>
+      </form>
+       <button onclick="validarsenha()">Log in</button>
+    </section>
 
-
-        
-
-        <section id="Login">
-
-            <form action="../home/principal.html" autocomplete="off" >
-                        <h1>Login</h1>
-
-                        <div class="inputBox">
-                            
-                                <label for="iemail"></label>
-                                <input type="email" id="iemail" name="email" required minlenght="5" maxlength="30" placeholder="E-mail:">
-                            
-                        </div>
-                        
-                            <div class="inputBox">
-                                <label for="ipassword"></label>
-                                <input type="password" id="ipassword" name="password" placeholder="Senha:" required minlenght="5" maxlength="30">
-                            </div>
-
-                            <div class="forget">
-                                
-                                <input type="checkbox" name="remember"
-                                 id="iremember">
-                                <label  for="iremember">Me manter conectado</label>
-
-                                <a href="#">Esqueci minha senha </a>
-
-
-                            </div>
-                           
-                            <button onclick="irParaPagina2()" >Log in</button>
-                            <div id="register">
-                                <p>
-                                    NÃ£o possuo conta <a href="../tela-Cadastro/Cadastro.html">Cadastrar</a>
-                                </p>
-
-                            </div>
-            </form>
-
-        </section>
-
-
-
-
-
-   <script>
-    function irParaPagina2() {
-             
-            
-          window.location.href="../home/principal.html";
+    <script>
+      function validarsenha() {
+        debugger;
+        var senha = "senha123";
+        var login = "ketlyn@gmail.com";
+        var loginDigitado = document.querySelector("#iemail");
+        var senhaDigitado = document.querySelector("#ipassword");
+        if (senha == senhaDigitado.value && login == loginDigitado.value) {
+          window.location.href = "pagina2.html";
+        } else {
+          alert("email ou senha incorretos");
         }
-
-   </script>
-    
-</body>
+      }
+    </script>
+  </body>
 </html>
