@@ -15,36 +15,33 @@ jobs:
   validacao:
     runs-on: ubuntu-latest
     steps:
-      
-name: Checkout
-      uses: actions/checkout@v4
+      - name: Checkout do código
+        uses: actions/checkout@v4
 
-      
-name: Check de arquivos e links
-      run: |
-        echo "Verificando se os arquivos base estão presentes..."
-        test -f index.html  (echo "ERRO: index.html sumiu!" && exit 1)
+      - name: Verificar arquivos
+        run: |
+          test -f index.html || exit 1
+          echo "index.html encontrado!"
 
-        echo "Verificando se o destino do login (pagina2.html) existe..."
-        test -f pagina2.html  (echo "ERRO: O login vai falhar porque pagina2.html não existe!" && exit 1)
-        echo "Tudo pronto para o deploy!"
   deploy:
     needs: validacao
     if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
     steps:
-      
-name: Checkout
-      uses: actions/checkout@v4
-name: Setup Pages
-    uses: actions/configure-pages@v4
-name: Upload
-  uses: actions/upload-pages-artifact@v3
-  with:
-    path: '.'
-name: Deploy
-id: deployment
-uses: actions/deploy-pages@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload Artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
