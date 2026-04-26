@@ -1,16 +1,15 @@
-function validarsenha() {
-  debugger;
-  var senha = "senha1234";
-  var login = "ketlyn@gmail.com";
-  var loginDigitado = document.querySelector("#iemail");
-  var senhaDigitado = document.querySelector("#ipassword");
-  if (senha == senhaDigitado.value && login == loginDigitado.value) {
-    window.location.href = "pagina2.html";
-  } else {
-    alert("email ou senha incorretos");
+function validarCredenciais(email, senha) {
+  const loginCorreto = "ketlyn@gmail.com";
+  const senhaCorreta = "senha1234";
+
+  // Retorna true se bater, false se não
+  if (email === loginCorreto && senha === senhaCorreta) {
+    return true;
   }
+  return false;
 }
 
-if (typeof module !== "undefined") {
+// Compatibilidade: exporta para o Jest (Node) sem quebrar o Navegador
+if (typeof module !== "undefined" && module.exports) {
   module.exports = { validarCredenciais };
 }

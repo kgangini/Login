@@ -48,7 +48,18 @@
     </section>
 
     <script src="auth.js">
-      
+    </script>
+    <script>
+      function validarNoNavegador() {
+        const email = document.querySelector("#iemail").value;
+        const senha = document.querySelector("#ipassword").value;
+
+        if (validarCredenciais(email, senha)) {
+          window.location.href = "pagina2.html";
+        } else {
+          alert("E-mail ou senha incorretos");
+        }
+      }
     </script>
   </body>
 </html>
