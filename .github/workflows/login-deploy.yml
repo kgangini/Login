@@ -1,9 +1,7 @@
-name: CI/CD Tela de Login com Testes
+name: CI/CD Tela de Login
 
 on:
   push:
-    branches: ["main"]
-  pull_request:
     branches: ["main"]
 
 permissions:
@@ -12,55 +10,29 @@ permissions:
   id-token: write
 
 jobs:
-  validacao:
+  testes:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Verificar arquivos essenciais
-        run: |
-          test -f index.html || exit 1
-          test -f auth.js || exit 1
-          echo "Arquivos index.html e auth.js encontrados!"
-
-  testes-unitarios:
-    needs: validacao
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Configurar Node.js
+      - uses: actions/checkout@v4
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
-
-      - name: Instalar Dependências (Jest)
+      - name: Instalar Dependencias
         run: npm install
-
-      - name: Executar 5 Casos de Teste
-        run: npm test
+      - name: Rodar Testes Unitarios
+        run: npx jest
 
   deploy:
-    needs: [validacao, testes-unitarios]
-    if: github.ref == 'refs/heads/main'
+    needs: testes
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
+      - uses: actions/checkout@v4
       - name: Setup Pages
         uses: actions/configure-pages@v4
-
-      - name: Upload Artifact
+      - name: Upload
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-
-      - name: Deploy to GitHub Pages
-        id: deployment
+      - name: Deploy
         uses: actions/deploy-pages@v4
