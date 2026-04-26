@@ -1,0 +1,24 @@
+{
+  "name": "login",
+  "version": "1.0.0",
+  "description": "projeto pagina de login",
+  "main": "auth.js",
+  "scripts": {
+  "test": "jest"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kgangini/Login.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/kgangini/Login/issues"
+  },
+  "homepage": "https://github.com/kgangini/Login#readme",
+  "devDependencies": {
+    "jest": "^30.3.0"
+  }
+}
