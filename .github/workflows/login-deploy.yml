@@ -1,9 +1,8 @@
-name: CI/CD Tela de Login Profissional
+name: CI/CD com Alerta Discord
 
 on:
   push:
     branches: ["main"]
-  workflow_dispatch:
 
 permissions:
   contents: read
@@ -11,57 +10,55 @@ permissions:
   id-token: write
 
 jobs:
-  validacao:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Verificar arquivos essenciais
-        run: |
-          test -f index.html || (echo "ERRO: index.html não encontrado" && exit 1)
-          test -f auth.js || (echo "ERRO: auth.js não encontrado" && exit 1)
-          test -f package.json || (echo "ERRO: package.json não encontrado" && exit 1)
-          echo "Todos os arquivos base estão presentes!"
-
   testes:
-    needs: validacao
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout do código
-        uses: actions/checkout@v4
-
-      - name: Configurar Node.js
+      - uses: actions/checkout@v4
+      - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
 
-      - name: Instalar Dependências (Forçado)
+      - name: Instalar Dependencias
         run: npm ci || npm install
 
-      - name: Executar 5 Casos de Teste (Caminho Direto)
-        run: ./node_modules/.bin/jest --passWithNoTests
+      - name: Rodar Testes Unitarios
+        id: run_tests
+        run: npx jest
+
+      - name: Notificar Sucesso no Discord
+        if: success()
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"content": "✅ **Testes Passaram!** O código está íntegro e pronto para o deploy. 🚀"}' \
+          ${{ secrets.DISCORD_WEBHOOK }}
+
+      - name: Notificar Falha no Discord
+        if: failure()
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"content": "❌ **ERRO NOS TESTES!** O deploy foi bloqueado para evitar que o site quebre. Verifique os logs no GitHub."}' \
+          ${{ secrets.DISCORD_WEBHOOK }}
 
   deploy:
     needs: testes
-    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Configurar GitHub Pages
+      - uses: actions/checkout@v4
+      - name: Setup Pages
         uses: actions/configure-pages@v4
-
-      - name: Upload dos arquivos
+      - name: Upload
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-
-      - name: Publicar no GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
+
+      - name: Notificar Deploy
+        if: success()
+        run: |
+          curl -X POST -H "Content-Type: application/json" \
+          -d '{"content": "🌐 **Deploy Realizado!** Sua nova versão da Pokedex/Login já está online: ${{ steps.deployment.outputs.page_url }}"}' \
+          ${{ secrets.DISCORD_WEBHOOK }}
