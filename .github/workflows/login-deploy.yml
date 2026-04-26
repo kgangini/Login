@@ -1,4 +1,4 @@
-name: CI/CD Tela de Login
+name: CI/CD Tela de Login com Testes
 
 on:
   push:
@@ -18,13 +18,32 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v4
 
-      - name: Verificar arquivos
+      - name: Verificar arquivos essenciais
         run: |
           test -f index.html || exit 1
-          echo "index.html encontrado!"
+          test -f auth.js || exit 1
+          echo "Arquivos index.html e auth.js encontrados!"
+
+  testes-unitarios:
+    needs: validacao
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Instalar Dependências (Jest)
+        run: npm install
+
+      - name: Executar 5 Casos de Teste
+        run: npm test
 
   deploy:
-    needs: validacao
+    needs: [validacao, testes-unitarios]
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     environment:
