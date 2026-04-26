@@ -60,5 +60,5 @@ jobs:
         if: success()
         run: |
           curl -X POST -H "Content-Type: application/json" \
-          -d '{"content": "🌐 **Deploy Realizado!** Sua nova versão da Pokedex/Login já está online: ${{ steps.deployment.outputs.page_url }}"}' \
+          -d '{"content": "🌐 **Deploy Realizado!** Sua nova versão de Login já está online: ${{ steps.deployment.outputs.page_url }}"}' \
           ${{ secrets.DISCORD_WEBHOOK }}
